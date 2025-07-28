@@ -1,61 +1,107 @@
-# Easy Social Login 🚀
+#  Easy Social Login
 
 [![pub package](https://img.shields.io/pub/v/easy_social_login.svg)](https://pub.dev/packages/easy_social_login)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=flat&logo=Flutter&logoColor=white)](https://flutter.dev)
-[![Firebase](https://img.shields.io/badge/firebase-%23039BE5.svg?style=flat&logo=firebase)](https://firebase.google.com)
+[![Flutter](https://img.shields.io/badge/Flutter-3.0+-blue.svg)](https://flutter.dev/)
 
-A comprehensive Flutter package that simplifies social media authentication with **Google Sign-In** and **Facebook Login**. Features responsive UI components, Firebase integration, and robust error handling.
+একটি comprehensive Flutter package যা social media authentication কে অত্যন্ত সহজ করে তোলে। Google, Facebook এবং অন্যান্য social providers এর সাথে seamless integration এবং responsive UI components প্রদান করে।
 
-## ✨ Features
+##  Features
 
-### 🔐 Authentication Providers
-- **Google Sign-In** - Complete integration with Google authentication
-- **Facebook Login** - Full Facebook authentication support
-- **Firebase Integration** - Optional Firebase Auth integration
-- **Platform Support** - iOS, Android, Web, macOS, Windows, Linux
+###  **Authentication Providers**
+- ✅ **Google Sign-In** - Latest API support with singleton pattern
+- ✅ **Facebook Login** - Complete integration with Graph API
+- ✅ **Firebase Integration** - Automatic Firebase Auth integration
+- 🔄 **More providers coming soon** (Apple, Twitter, GitHub)
 
-### 🎨 UI Components
-- **Responsive Design** - Adaptive layouts for all screen sizes
-- **Customizable Buttons** - Pre-built social login buttons
-- **Material 3 Support** - Modern Material Design components
-- **Dark/Light Theme** - Automatic theme adaptation
-- **Loading States** - Built-in loading indicators
+###  **UI Components**
+- 📱 **Responsive Design** - Mobile, Tablet, Desktop adaptive
+- 🎯 **Pre-built Buttons** - Ready-to-use social login buttons
+- 🎨 **Customizable** - Colors, sizes, shapes, text সব customize করা যায়
+- 🌙 **Dark/Light Theme** - Automatic theme adaptation
+- 📐 **Flexible Layouts** - Row, Column, Grid layouts
 
-### 🛡️ Security & Error Handling
-- **Comprehensive Error Types** - Specific exception handling
-- **Network Error Recovery** - Automatic retry mechanisms
-- **Platform Validation** - Runtime platform support checking
-- **Secure Token Management** - Safe credential handling
+###  **Developer Experience**
+- 🚀 **Easy Setup** - Minimal configuration required
+- 📚 **Type Safety** - Full Dart null safety support
+- 🔄 **State Management** - Built-in loading and error states
+- 🧪 **Well Tested** - Comprehensive test coverage
+- 📖 **Rich Documentation** - Detailed examples and guides
 
-### 🌍 Developer Experience
-- **Simple API** - Intuitive method signatures
-- **TypeScript-like** - Strong typing with null safety
-- **Extensive Documentation** - Complete API reference
-- **Example App** - Working demonstration
+###  **Platform Support**
+- 📱 **Android** - Native integration
+- 🍎 **iOS** - Native integration  
+- 🌐 **Web** - Full web support
+- 🖥️ **Desktop** - Windows, macOS, Linux (limited)
 
-## 📦 Installation
+##  Installation
 
-Add this to your package's `pubspec.yaml` file:
-
+### 1. Add dependency
 ```yaml
 dependencies:
   easy_social_login: ^1.0.0
-  firebase_core: ^2.24.2  # Required for Firebase integration
-  firebase_auth: ^4.15.3  # Required for Firebase integration
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.15.3
 ```
 
-Then run:
-
+### 2. Install packages
 ```bash
 flutter pub get
 ```
 
-## 🚀 Quick Start
+### 3. Platform Setup
 
-### 1. Basic Setup
+####  **Android Setup**
+
+**android/app/build.gradle:**
+```gradle
+android {
+    compileSdkVersion 34
+    
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 34
+    }
+}
+```
+
+**android/app/src/main/AndroidManifest.xml:**
+```xml
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+```
+
+####  **iOS Setup**
+
+**ios/Runner/Info.plist:**
+```xml
+<key>CFBundleURLTypes</key>
+<array>
+    <dict>
+        <key>CFBundleURLName</key>
+        <string>REVERSED_CLIENT_ID</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+            <string>YOUR_REVERSED_CLIENT_ID</string>
+        </array>
+    </dict>
+</array>
+```
+
+####  **Web Setup**
+
+**web/index.html:**
+```html
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
+```
+
+##  Quick Start
+
+### Basic Usage
 
 ```dart
+import 'package:flutter/material.dart';
 import 'package:easy_social_login/easy_social_login.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -70,17 +116,26 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SocialLoginButton.google(
-              onPressed: _handleGoogleSignIn,
-            ),
-            SizedBox(height: 16),
-            SocialLoginButton.facebook(
-              onPressed: _handleFacebookSignIn,
-            ),
-          ],
+        child: Padding(
+          padding: EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Google Sign-In Button
+              SocialLoginButton.google(
+                onPressed: _handleGoogleSignIn,
+                text: 'Sign in with Google',
+              ),
+              
+              SizedBox(height: 16),
+              
+              // Facebook Login Button
+              SocialLoginButton.facebook(
+                onPressed: _handleFacebookSignIn,
+                text: 'Continue with Facebook',
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -88,125 +143,108 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _handleGoogleSignIn() async {
     try {
-      final result = await _socialLogin.signInWithGoogle();
-      print('Welcome ${result.name}!');
+      final result = await _socialLogin.signInWithGoogle(
+        signIntoFirebase: true,
+      );
+      
+      print('User: ${result.name}');
+      print('Email: ${result.email}');
+      print('Firebase UID: ${result.firebaseUser?.uid}');
+      
     } catch (e) {
-      print('Sign-in failed: $e');
+      print('Error: $e');
     }
   }
 
   Future<void> _handleFacebookSignIn() async {
     try {
-      final result = await _socialLogin.signInWithFacebook();
-      print('Welcome ${result.name}!');
+      final result = await _socialLogin.signInWithFacebook(
+        signIntoFirebase: true,
+      );
+      
+      print('User: ${result.name}');
+      print('Email: ${result.email}');
+      
     } catch (e) {
-      print('Login failed: $e');
+      print('Error: $e');
     }
   }
 }
 ```
 
-### 2. Firebase Integration
+##  UI Customization
+
+### Responsive Layout
 
 ```dart
-// Initialize Firebase first
-await Firebase.initializeApp(
-  options: DefaultFirebaseOptions.currentPlatform,
-);
+// Mobile Layout
+SocialLoginButtonColumn(
+  spacing: 16,
+  buttons: [
+    SocialLoginButton.google(
+      width: double.infinity,
+      height: 50,
+    ),
+    SocialLoginButton.facebook(
+      width: double.infinity,
+      height: 50,
+    ),
+  ],
+)
 
-// Sign in with Firebase integration
-final result = await _socialLogin.signInWithGoogle(
-  signIntoFirebase: true,
-);
-
-// Access Firebase user
-if (result.firebaseUser != null) {
-  print('Firebase UID: ${result.firebaseUser!.uid}');
-}
+// Desktop Layout
+SocialLoginButtonRow(
+  spacing: 16,
+  buttons: [
+    SocialLoginButton.google(width: 200),
+    SocialLoginButton.facebook(width: 200),
+  ],
+)
 ```
-
-## 🎨 UI Customization
 
 ### Custom Button Styling
 
 ```dart
-SocialLoginButton(
-  text: 'Sign in with Google',
-  icon: Icons.login,
-  backgroundColor: Colors.blue,
-  textColor: Colors.white,
-  borderRadius: 12,
-  height: 50,
-  width: 300,
+SocialLoginButton.google(
+  height: 56,
+  width: double.infinity,
+  backgroundColor: Colors.white,
+  textColor: Colors.black87,
+  borderRadius: BorderRadius.circular(12),
   textStyle: TextStyle(
     fontSize: 16,
-    fontWeight: FontWeight.bold,
+    fontWeight: FontWeight.w600,
   ),
-  onPressed: _handleGoogleSignIn,
+  padding: EdgeInsets.symmetric(horizontal: 24),
+  elevation: 4,
 )
 ```
 
-### Responsive Layouts
+### Dark Theme Support
 
 ```dart
-// Vertical layout
-SocialLoginButtonColumn(
-  spacing: 16,
-  buttons: [
-    SocialLoginButton.google(onPressed: _handleGoogleSignIn),
-    SocialLoginButton.facebook(onPressed: _handleFacebookSignIn),
-  ],
-)
-
-// Horizontal layout
-SocialLoginButtonRow(
-  spacing: 16,
-  buttons: [
-    SocialLoginButton.google(onPressed: _handleGoogleSignIn),
-    SocialLoginButton.facebook(onPressed: _handleFacebookSignIn),
-  ],
+SocialLoginButton.google(
+  backgroundColor: Color(0xFF2D2D2D),
+  textColor: Colors.white,
+  border: BorderSide(color: Color(0xFF404040)),
 )
 ```
 
-### Adaptive Design
+##  Advanced Configuration
+
+### Firebase Setup
 
 ```dart
-Widget buildResponsiveLogin(BuildContext context) {
-  final screenWidth = MediaQuery.of(context).size.width;
-  
-  if (screenWidth > 600) {
-    // Desktop/Tablet - Horizontal layout
-    return SocialLoginButtonRow(
-      spacing: 20,
-      buttons: _buildButtons(),
-    );
-  } else {
-    // Mobile - Vertical layout
-    return SocialLoginButtonColumn(
-      spacing: 16,
-      buttons: _buildButtons(),
-    );
-  }
-}
-```
+// Initialize Firebase first
+await Firebase.initializeApp();
 
-## 🔧 Advanced Configuration
+// Configure social login
+final socialLogin = EasySocialLogin();
 
-### Google Sign-In Configuration
-
-```dart
-final result = await _socialLogin.signInWithGoogle(
+// Sign in with automatic Firebase integration
+final result = await socialLogin.signInWithGoogle(
   signIntoFirebase: true,
-  scopes: ['email', 'profile'],
-);
-```
-
-### Facebook Login Configuration
-
-```dart
-final result = await _socialLogin.signInWithFacebook(
-  signIntoFirebase: true,
-  permissions: ['email', 'public_profile'],
+  serverClientId: 'YOUR_SERVER_CLIENT_ID', // For backend integration
 );
 ```
 
@@ -215,158 +253,198 @@ final result = await _socialLogin.signInWithFacebook(
 ```dart
 try {
   final result = await _socialLogin.signInWithGoogle();
-  // Handle success
 } on SocialLoginCancelledException {
   // User cancelled the sign-in
+  print('Sign-in cancelled by user');
 } on SocialLoginNetworkException catch (e) {
-  // Network error occurred
+  // Network error
   print('Network error: ${e.message}');
 } on SocialLoginPlatformNotSupportedException {
   // Platform not supported
+  print('Platform not supported');
 } on SocialLoginException catch (e) {
-  // General social login error
-  print('Login failed: ${e.message}');
+  // General error
+  print('Sign-in failed: ${e.message}');
 }
 ```
 
-## 📱 Platform Setup
-
-### Android Setup
-
-1. **Google Sign-In**: Add your `google-services.json` to `android/app/`
-2. **Facebook Login**: Add to `android/app/src/main/res/values/strings.xml`:
-
-```xml
-<string name="facebook_app_id">YOUR_FACEBOOK_APP_ID</string>
-<string name="fb_login_protocol_scheme">fbYOUR_FACEBOOK_APP_ID</string>
-```
-
-### iOS Setup
-
-1. **Google Sign-In**: Add your `GoogleService-Info.plist` to `ios/Runner/`
-2. **Facebook Login**: Add to `ios/Runner/Info.plist`:
-
-```xml
-<key>CFBundleURLTypes</key>
-<array>
-  <dict>
-    <key>CFBundleURLName</key>
-    <string>facebook</string>
-    <key>CFBundleURLSchemes</key>
-    <array>
-      <string>fbYOUR_FACEBOOK_APP_ID</string>
-    </array>
-  </dict>
-</array>
-```
-
-### Web Setup
-
-1. **Google Sign-In**: Add to `web/index.html`:
-
-```html
-<meta name="google-signin-client_id" content="YOUR_GOOGLE_CLIENT_ID">
-```
-
-2. **Facebook Login**: Add Facebook SDK script to `web/index.html`
-
-## 🧪 Testing
+### Loading States
 
 ```dart
+bool _isLoading = false;
+
+SocialLoginButton.google(
+  isLoading: _isLoading,
+  loadingWidget: CircularProgressIndicator(
+    strokeWidth: 2,
+    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+  ),
+  onPressed: () async {
+    setState(() => _isLoading = true);
+    
+    try {
+      await _socialLogin.signInWithGoogle();
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  },
+)
+```
+
+##  Platform-Specific Features
+
+### Android
+
+```dart
+// Check if Google Play Services available
+if (_socialLogin.isGoogleSupported) {
+  // Show Google Sign-In button
+}
+```
+
+### iOS
+
+```dart
+// Handle iOS-specific configurations
+// Automatic handling of iOS keychain and biometric authentication
+```
+
+### Web
+
+```dart
+// Web-specific popup handling
+// Automatic CORS and domain verification
+```
+
+##  Security Best Practices
+
+### 1. Server-Side Verification
+
+```dart
+final result = await _socialLogin.signInWithGoogle(
+  serverClientId: 'YOUR_SERVER_CLIENT_ID',
+);
+
+// Send result.serverAuthCode to your backend for verification
+```
+
+### 2. Token Management
+
+```dart
+// Access tokens are automatically managed
+// Refresh tokens handled internally
+// Secure storage implementation
+```
+
+### 3. Privacy Compliance
+
+```dart
+// GDPR compliant
+// User consent handling
+// Data minimization principles
+```
+
+##  Testing
+
+### Unit Tests
+
+```dart
+import 'package:flutter_test/flutter_test.dart';
+import 'package:easy_social_login/easy_social_login.dart';
+
 void main() {
-  group('Easy Social Login Tests', () {
-    late EasySocialLogin socialLogin;
-
-    setUp(() {
-      socialLogin = EasySocialLogin();
-    });
-
-    test('should check platform support', () {
-      expect(socialLogin.isGoogleSupported, isA<bool>());
-      expect(socialLogin.isFacebookSupported, isA<bool>());
+  group('EasySocialLogin Tests', () {
+    test('should initialize correctly', () {
+      final socialLogin = EasySocialLogin();
+      expect(socialLogin, isNotNull);
     });
   });
 }
 ```
 
-## 🚀 Performance
+### Widget Tests
 
-- **Lazy Loading**: Providers are initialized only when needed
-- **Memory Efficient**: Minimal memory footprint
-- **Fast Authentication**: Optimized for quick sign-in flows
-- **Caching**: Intelligent credential caching
+```dart
+testWidgets('SocialLoginButton should render correctly', (tester) async {
+  await tester.pumpWidget(
+    MaterialApp(
+      home: SocialLoginButton.google(
+        onPressed: () {},
+      ),
+    ),
+  );
+  
+  expect(find.text('Sign in with Google'), findsOneWidget);
+});
+```
 
-## 🌍 Internationalization
+##  Performance
+
+- ⚡ **Fast initialization** - Lazy loading of providers
+- 🔄 **Efficient caching** - Token and user data caching
+- 📱 **Memory optimized** - Minimal memory footprint
+- 🚀 **Quick response** - Optimized API calls
+
+##  Internationalization
 
 ```dart
 SocialLoginButton.google(
-  text: AppLocalizations.of(context).signInWithGoogle,
-  onPressed: _handleGoogleSignIn,
+  text: 'Google দিয়ে সাইন ইন করুন', // Bengali
+  // text: 'Googleでサインイン', // Japanese
+  // text: 'Iniciar sesión con Google', // Spanish
 )
 ```
 
-## 📊 Migration Guide
+##  Migration Guide
 
-### From google_sign_in package
-
-```dart
-// Before
-final GoogleSignInAccount? account = await GoogleSignIn().signIn();
-
-// After
-final SocialLoginResult result = await EasySocialLogin().signInWithGoogle();
-```
-
-### From flutter_facebook_auth package
+### From other packages
 
 ```dart
-// Before
-final LoginResult result = await FacebookAuth.instance.login();
+// Old way (google_sign_in)
+GoogleSignIn _googleSignIn = GoogleSignIn();
+GoogleSignInAccount? account = await _googleSignIn.signIn();
 
-// After
-final SocialLoginResult result = await EasySocialLogin().signInWithFacebook();
+// New way (easy_social_login)
+EasySocialLogin _socialLogin = EasySocialLogin();
+SocialLoginResult result = await _socialLogin.signInWithGoogle();
 ```
 
-## 🐛 Troubleshooting
+##  Troubleshooting
 
 ### Common Issues
 
-**Google Sign-In not working on Android:**
-- Ensure `google-services.json` is properly configured
-- Check SHA-1 fingerprints in Firebase Console
-- Verify package name matches Firebase project
-
-**Facebook Login failing:**
-- Confirm Facebook App ID is correct
-- Check app is in development/live mode
-- Verify bundle ID/package name in Facebook Developer Console
-
-**Firebase integration issues:**
-- Ensure Firebase is initialized before using social login
-- Check Firebase project configuration
-- Verify authentication providers are enabled
-
-### Debug Mode
-
-```dart
-// Enable debug logging
-EasySocialLogin.enableDebugMode = true;
+**1. Google Sign-In not working on Android:**
+```bash
+# Check SHA-1 fingerprint
+keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey
 ```
 
-## 🗺️ Roadmap
+**2. Facebook Login issues:**
+```dart
+// Ensure Facebook App ID is correctly configured
+// Check Facebook Developer Console settings
+```
 
-- [ ] **Apple Sign-In** support
-- [ ] **Twitter/X** authentication
-- [ ] **LinkedIn** login integration
-- [ ] **Microsoft** account support
-- [ ] **Biometric** authentication
-- [ ] **Multi-factor** authentication
-- [ ] **Custom OAuth** providers
-- [ ] **Analytics** integration
+**3. Web platform issues:**
+```html
+<!-- Ensure correct client ID in web/index.html -->
+<meta name="google-signin-client_id" content="YOUR_CLIENT_ID">
+```
 
-## 🤝 Contributing
+##  Roadmap
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+- [ ] Apple Sign-In integration
+- [ ] Twitter/X authentication
+- [ ] GitHub OAuth
+- [ ] LinkedIn integration
+- [ ] Microsoft Azure AD
+- [ ] Custom OAuth providers
+- [ ] Biometric authentication
+- [ ] Multi-factor authentication
+
+##  Contributing
+
+আমরা community contributions স্বাগত জানাই! 
 
 ### Development Setup
 
@@ -378,41 +456,41 @@ git clone https://github.com/Muhit10/easy_social_login.git
 cd easy_social_login
 flutter pub get
 
-# Run example app
+# Run example
 cd example
 flutter run
-
-# Run tests
-flutter test
 ```
 
-### Code Style
+### Contribution Guidelines
 
-- Follow [Dart Style Guide](https://dart.dev/guides/language/effective-dart/style)
-- Use `flutter format` before committing
-- Add tests for new features
-- Update documentation
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests
+5. Update documentation
+6. Submit a pull request
 
-## 📄 License
+##  License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
-- [Google Sign-In](https://pub.dev/packages/google_sign_in) team
-- [Flutter Facebook Auth](https://pub.dev/packages/flutter_facebook_auth) team
-- [Firebase](https://firebase.google.com) team
-- Flutter community for feedback and contributions
+- Flutter team for the amazing framework
+- Google Sign-In team for the authentication APIs
+- Facebook developers for the Login SDK
+- Firebase team for the backend services
 
-## 📞 Support
+##  Support
 
-- **Documentation**: [API Reference](https://pub.dev/documentation/easy_social_login/latest/)
-- **Issues**: [GitHub Issues](https://github.com/Muhit10/easy_social_login/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/Muhit10/easy_social_login/discussions)
-- **Email**: [muhit.flutter@gmail.com](mailto:muhit.flutter@gmail.com)
+- 📧 **Email:** support@easysociallogin.dev
+- 🐛 **Issues:** [GitHub Issues](https://github.com/Muhit10/easy_social_login/issues)
+- 💬 **Discussions:** [GitHub Discussions](https://github.com/Muhit10/easy_social_login/discussions)
+- 📚 **Documentation:** [Wiki](https://github.com/Muhit10/easy_social_login/wiki)
 
 ---
 
-**Made with ❤️ by [Muhit](https://github.com/Muhit10)**
+**Made with ❤️ by Flutter developers, for Flutter developers**
 
-*If this package helped you, please ⭐ star the repo and share it with others!*
+[![GitHub stars](https://img.shields.io/github/stars/Muhit10/easy_social_login.svg?style=social&label=Star)](https://github.com/Muhit10/easy_social_login)
+[![GitHub forks](https://img.shields.io/github/forks/Muhit10/easy_social_login.svg?style=social&label=Fork)](https://github.com/Muhit10/easy_social_login/fork)
