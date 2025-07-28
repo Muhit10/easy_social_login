@@ -1,40 +1,40 @@
-#  Easy Social Login
+# Easy Social Login
 
 [![pub package](https://img.shields.io/pub/v/easy_social_login.svg)](https://pub.dev/packages/easy_social_login)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Flutter](https://img.shields.io/badge/Flutter-3.0+-blue.svg)](https://flutter.dev/)
 
-একটি comprehensive Flutter package যা social media authentication কে অত্যন্ত সহজ করে তোলে। Google, Facebook এবং অন্যান্য social providers এর সাথে seamless integration এবং responsive UI components প্রদান করে।
+A comprehensive Flutter package that makes social media authentication extremely easy. Provides seamless integration with Google, Facebook and other social providers along with responsive UI components.
 
-##  Features
+## Features
 
-###  **Authentication Providers**
+### **Authentication Providers**
 - ✅ **Google Sign-In** - Latest API support with singleton pattern
 - ✅ **Facebook Login** - Complete integration with Graph API
 - ✅ **Firebase Integration** - Automatic Firebase Auth integration
 - 🔄 **More providers coming soon** (Apple, Twitter, GitHub)
 
-###  **UI Components**
+### **UI Components**
 - 📱 **Responsive Design** - Mobile, Tablet, Desktop adaptive
 - 🎯 **Pre-built Buttons** - Ready-to-use social login buttons
-- 🎨 **Customizable** - Colors, sizes, shapes, text সব customize করা যায়
+- 🎨 **Customizable** - Colors, sizes, shapes, text all customizable
 - 🌙 **Dark/Light Theme** - Automatic theme adaptation
 - 📐 **Flexible Layouts** - Row, Column, Grid layouts
 
-###  **Developer Experience**
+### **Developer Experience**
 - 🚀 **Easy Setup** - Minimal configuration required
 - 📚 **Type Safety** - Full Dart null safety support
 - 🔄 **State Management** - Built-in loading and error states
 - 🧪 **Well Tested** - Comprehensive test coverage
 - 📖 **Rich Documentation** - Detailed examples and guides
 
-###  **Platform Support**
+### **Platform Support**
 - 📱 **Android** - Native integration
 - 🍎 **iOS** - Native integration  
 - 🌐 **Web** - Full web support
 - 🖥️ **Desktop** - Windows, macOS, Linux (limited)
 
-##  Installation
+## Installation
 
 ### 1. Add dependency
 ```yaml
@@ -51,7 +51,7 @@ flutter pub get
 
 ### 3. Platform Setup
 
-####  **Android Setup**
+#### **Android Setup**
 
 **android/app/build.gradle:**
 ```gradle
@@ -71,7 +71,7 @@ android {
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 ```
 
-####  **iOS Setup**
+#### **iOS Setup**
 
 **ios/Runner/Info.plist:**
 ```xml
@@ -88,7 +88,7 @@ android {
 </array>
 ```
 
-####  **Web Setup**
+#### **Web Setup**
 
 **web/index.html:**
 ```html
@@ -96,7 +96,7 @@ android {
 <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
 ```
 
-##  Quick Start
+## Quick Start
 
 ### Basic Usage
 
@@ -172,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
 }
 ```
 
-##  UI Customization
+## UI Customization
 
 ### Responsive Layout
 
@@ -230,7 +230,7 @@ SocialLoginButton.google(
 )
 ```
 
-##  Advanced Configuration
+## Advanced Configuration
 
 ### Firebase Setup
 
@@ -291,7 +291,7 @@ SocialLoginButton.google(
 )
 ```
 
-##  Platform-Specific Features
+## Platform-Specific Features
 
 ### Android
 
@@ -316,7 +316,7 @@ if (_socialLogin.isGoogleSupported) {
 // Automatic CORS and domain verification
 ```
 
-##  Security Best Practices
+## Security Best Practices
 
 ### 1. Server-Side Verification
 
@@ -344,7 +344,7 @@ final result = await _socialLogin.signInWithGoogle(
 // Data minimization principles
 ```
 
-##  Testing
+## Testing
 
 ### Unit Tests
 
@@ -378,24 +378,25 @@ testWidgets('SocialLoginButton should render correctly', (tester) async {
 });
 ```
 
-##  Performance
+## Performance
 
 - ⚡ **Fast initialization** - Lazy loading of providers
 - 🔄 **Efficient caching** - Token and user data caching
 - 📱 **Memory optimized** - Minimal memory footprint
 - 🚀 **Quick response** - Optimized API calls
 
-##  Internationalization
+## Internationalization
 
 ```dart
 SocialLoginButton.google(
-  text: 'Google দিয়ে সাইন ইন করুন', // Bengali
+  text: 'Sign in with Google', // English
   // text: 'Googleでサインイン', // Japanese
   // text: 'Iniciar sesión con Google', // Spanish
+  // text: 'Se connecter avec Google', // French
 )
 ```
 
-##  Migration Guide
+## Migration Guide
 
 ### From other packages
 
@@ -409,7 +410,7 @@ EasySocialLogin _socialLogin = EasySocialLogin();
 SocialLoginResult result = await _socialLogin.signInWithGoogle();
 ```
 
-##  Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -431,7 +432,7 @@ keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey
 <meta name="google-signin-client_id" content="YOUR_CLIENT_ID">
 ```
 
-##  Roadmap
+## Roadmap
 
 - [ ] Apple Sign-In integration
 - [ ] Twitter/X authentication
@@ -442,9 +443,9 @@ keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey
 - [ ] Biometric authentication
 - [ ] Multi-factor authentication
 
-##  Contributing
+## Contributing
 
-আমরা community contributions স্বাগত জানাই! 
+We welcome community contributions! 
 
 ### Development Setup
 
@@ -470,18 +471,18 @@ flutter run
 5. Update documentation
 6. Submit a pull request
 
-##  License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-##  Acknowledgments
+## Acknowledgments
 
 - Flutter team for the amazing framework
 - Google Sign-In team for the authentication APIs
 - Facebook developers for the Login SDK
 - Firebase team for the backend services
 
-##  Support
+## Support
 
 - 📧 **Email:** support@easysociallogin.dev
 - 🐛 **Issues:** [GitHub Issues](https://github.com/Muhit10/easy_social_login/issues)
