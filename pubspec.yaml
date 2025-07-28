@@ -1,0 +1,43 @@
+name: easy_social_login
+description: A comprehensive Flutter package for social media authentication with Google Sign-In and Facebook Login. Features responsive UI, Firebase integration, and robust error handling.
+version: 1.0.0
+homepage: https://github.com/Muhit10/easy_social_login
+repository: https://github.com/Muhit10/easy_social_login
+issue_tracker: https://github.com/Muhit10/easy_social_login/issues
+documentation: https://github.com/Muhit10/easy_social_login#readme
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.15.3
+  google_sign_in: ^6.1.6
+  flutter_facebook_auth: ^6.0.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  # This package does not contain any assets
+
+topics:
+  - authentication
+  - social-login
+  - google-signin
+  - facebook-login
+  - firebase
+  - oauth
+  - responsive-ui
+  - material3
+
+screenshots:
+  - description: 'Easy Social Login Demo App'
+    path: screenshots/demo.png
+  - description: 'Responsive Social Login Buttons'
+    path: screenshots/responsive.png
