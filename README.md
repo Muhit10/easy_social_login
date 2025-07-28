@@ -9,30 +9,30 @@
 ##  Features
 
 ###  **Authentication Providers**
-- ✅ **Google Sign-In** - Latest API support with singleton pattern
-- ✅ **Facebook Login** - Complete integration with Graph API
-- ✅ **Firebase Integration** - Automatic Firebase Auth integration
-- 🔄 **More providers coming soon** (Apple, Twitter, GitHub)
+-  **Google Sign-In** - Latest API support with singleton pattern
+-  **Facebook Login** - Complete integration with Graph API
+-  **Firebase Integration** - Automatic Firebase Auth integration
+-  **More providers coming soon** (Apple, Twitter, GitHub)
 
 ###  **UI Components**
-- 📱 **Responsive Design** - Mobile, Tablet, Desktop adaptive
-- 🎯 **Pre-built Buttons** - Ready-to-use social login buttons
-- 🎨 **Customizable** - Colors, sizes, shapes, text সব customize করা যায়
-- 🌙 **Dark/Light Theme** - Automatic theme adaptation
-- 📐 **Flexible Layouts** - Row, Column, Grid layouts
+-  **Responsive Design** - Mobile, Tablet, Desktop adaptive
+-  **Pre-built Buttons** - Ready-to-use social login buttons
+-  **Customizable** - Colors, sizes, shapes, text সব customize করা যায়
+-  **Dark/Light Theme** - Automatic theme adaptation
+-  **Flexible Layouts** - Row, Column, Grid layouts
 
 ###  **Developer Experience**
-- 🚀 **Easy Setup** - Minimal configuration required
-- 📚 **Type Safety** - Full Dart null safety support
-- 🔄 **State Management** - Built-in loading and error states
-- 🧪 **Well Tested** - Comprehensive test coverage
-- 📖 **Rich Documentation** - Detailed examples and guides
+-  **Easy Setup** - Minimal configuration required
+-  **Type Safety** - Full Dart null safety support
+-  **State Management** - Built-in loading and error states
+-  **Well Tested** - Comprehensive test coverage
+-  **Rich Documentation** - Detailed examples and guides
 
 ###  **Platform Support**
-- 📱 **Android** - Native integration
-- 🍎 **iOS** - Native integration  
-- 🌐 **Web** - Full web support
-- 🖥️ **Desktop** - Windows, macOS, Linux (limited)
+-  **Android** - Native integration
+-  **iOS** - Native integration  
+-  **Web** - Full web support
+-  **Desktop** - Windows, macOS, Linux (limited)
 
 ##  Installation
 
