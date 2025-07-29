@@ -3,6 +3,7 @@ export 'src/models/social_login_result.dart';
 export 'src/exceptions/social_login_exceptions.dart';
 export 'src/widgets/social_login_button.dart';
 
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -12,6 +13,7 @@ import 'src/models/social_login_result.dart';
 import 'src/exceptions/social_login_exceptions.dart';
 import 'src/providers/google_signin_provider.dart';
 import 'src/providers/facebook_signin_provider.dart';
+import 'src/providers/apple_signin_provider.dart';
 
 /// Main class for easy social login functionality
 /// 
@@ -24,6 +26,7 @@ class EasySocialLogin {
 
   final GoogleSignInProvider _googleProvider = GoogleSignInProvider();
   final FacebookSignInProvider _facebookProvider = FacebookSignInProvider();
+  final AppleSignInProvider _appleProvider = AppleSignInProvider();
 
   bool _firebaseInitialized = false;
 
@@ -91,9 +94,26 @@ class EasySocialLogin {
 
     return await _facebookProvider.signIn(
       signIntoFirebase: signIntoFirebase,
-      permissions: permissions,
-      loginBehavior: loginBehavior,
     );
+  }
+
+  /// Sign in with Apple
+  /// 
+  /// [signIntoFirebase] - Whether to sign into Firebase after Apple authentication
+  /// 
+  /// Returns [SocialLoginResult] with user information and credentials
+  /// 
+  /// Throws [SocialLoginException] on authentication errors
+  /// 
+  /// Note: Apple Sign-In is only available on iOS 13+ and macOS 10.15+
+  Future<SocialLoginResult> signInWithApple({
+    bool signIntoFirebase = true,
+  }) async {
+    if (signIntoFirebase) {
+      await initializeFirebase();
+    }
+
+    return await _appleProvider.signIn(signIntoFirebase: signIntoFirebase);
   }
 
   /// Sign out from all providers
@@ -113,6 +133,9 @@ class EasySocialLogin {
     // Sign out from Facebook
     signOutFutures.add(_facebookProvider.signOut());
 
+    // Sign out from Apple (note: Apple doesn't provide a sign-out method)
+    signOutFutures.add(_appleProvider.signOut());
+
     // Wait for all sign-out operations to complete
     await Future.wait(signOutFutures);
   }
@@ -125,6 +148,12 @@ class EasySocialLogin {
   /// Sign out from Facebook only
   Future<void> signOutFacebook() async {
     await _facebookProvider.signOut();
+  }
+
+  /// Sign out from Apple only
+  /// Note: Apple doesn't provide a traditional sign-out method
+  Future<void> signOutApple() async {
+    await _appleProvider.signOut();
   }
 
   /// Sign out from Firebase only
@@ -149,11 +178,19 @@ class EasySocialLogin {
   /// Check if Facebook is supported on current platform
   bool get isFacebookSupported => _facebookProvider.isSupported;
 
+  /// Check if Apple Sign-In is supported on current platform
+  /// Apple Sign-In is only available on iOS 13+ and macOS 10.15+
+  bool get isAppleSupported => Platform.isIOS || Platform.isMacOS;
+
   /// Check if user is signed in with Google
   bool get isGoogleSignedIn => _googleProvider.isSignedIn;
 
   /// Check if user is signed in with Facebook
-  Future<bool> get isFacebookSignedIn => _facebookProvider.isSignedIn;
+  bool get isFacebookSignedIn => _facebookProvider.isSignedIn;
+
+  /// Check if user is signed in with Apple
+  /// Note: Apple doesn't provide a way to check sign-in status
+  bool get isAppleSignedIn => false; // Apple doesn't maintain sign-in state
 
   /// Get current Google user
   GoogleSignInAccount? get currentGoogleUser => _googleProvider.currentUser;

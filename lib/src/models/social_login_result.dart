@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'social_login_user.dart';
 
 /// Result object returned by social login operations
 /// Contains user information and authentication credentials
@@ -26,6 +27,9 @@ class SocialLoginResult {
   
   /// Raw provider data for advanced use cases
   final Map<String, dynamic>? rawData;
+  
+  /// User information from the social login provider
+  final SocialLoginUser? user;
 
   const SocialLoginResult({
     this.name,
@@ -36,6 +40,7 @@ class SocialLoginResult {
     required this.provider,
     this.firebaseUser,
     this.rawData,
+    this.user,
   });
 
   /// Creates a copy of this result with updated values

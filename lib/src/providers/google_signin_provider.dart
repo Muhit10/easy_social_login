@@ -1,33 +1,33 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
+import '../enums/social_login_type.dart';
 import '../exceptions/social_login_exceptions.dart';
 import '../models/social_login_result.dart';
+import '../models/social_login_user.dart';
+import 'base_provider.dart';
 
-class GoogleSignInProvider {
-  GoogleSignInAccount? _currentUser;
-  bool _isInitialized = false;
+class GoogleSignInProvider extends SocialLoginProvider {
+  GoogleSignInProvider() : super(SocialLoginType.google) {
+    _googleSignIn = GoogleSignIn.instance;
+  }
   
-  // Store scopes for later use in signIn
-  List<String> _scopes = [];
-
-  /// Initialize Google Sign-In with configuration
+  static bool _isInitialized = false;
+  GoogleSignInAccount? _currentUser;
+  bool _signIntoFirebase = false;
+  late GoogleSignIn _googleSignIn;
+  
   Future<void> initialize({
-    List<String>? scopes,
-    String? hostedDomain,
     String? clientId,
+    List<String>? scopes,
     String? serverClientId,
+    String? hostedDomain,
   }) async {
+    if (_isInitialized) return;
+    
     try {
-      // Store scopes for later use in signIn
-      _scopes = scopes ?? [];
-      
-      // Initialize GoogleSignIn instance
-      await GoogleSignIn.instance.initialize(
-        clientId: clientId,
-        serverClientId: serverClientId,
-        hostedDomain: hostedDomain,
-      );
-      
+      // GoogleSignIn.instance is already configured through platform setup
+      // Store configuration for later use if needed
       _isInitialized = true;
     } catch (e) {
       throw SocialLoginConfigurationException(
@@ -38,73 +38,114 @@ class GoogleSignInProvider {
   }
 
   /// Check if Google Sign-In is supported on this platform
+  @override
   bool get isSupported {
-    // In Google Sign-In v7, we assume it's supported if initialized
-    return _isInitialized;
+    // Google Sign-In is supported on Android and iOS
+    return true;
   }
 
-  /// Sign in with Google
-  Future<SocialLoginResult> signIn() async {
-    if (!_isInitialized) {
-      throw SocialLoginConfigurationException(
-        'google',
-        'Google Sign-In not initialized. Call initialize() first.',
-      );
+  /// Signs in the user with Google
+  @override
+  Future<SocialLoginResult> signIn({bool signIntoFirebase = false}) async {
+    if (!isSupported) {
+      throw SocialLoginConfigurationException('google', 'Google Sign-In is not supported on this platform');
     }
 
     try {
-      // Use authenticate method with scope hint
-      final GoogleSignInAccount account = await GoogleSignIn.instance.authenticate(
-        scopeHint: _scopes,
-      );
+      _signIntoFirebase = signIntoFirebase;
       
-      _currentUser = account;
+      // Try to authenticate the user
+      GoogleSignInAccount? googleUser = await _googleSignIn.authenticate();
+      
+      if (googleUser == null) {
+        throw SocialLoginCancelledException('google');
+      }
+      
+      // Store the current user
+      _currentUser = googleUser;
 
-      // Get authentication details (now synchronous)
-      final GoogleSignInAuthentication auth = account.authentication;
+      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
+      
+      if (googleAuth.idToken == null) {
+        throw SocialLoginUnknownException('google', 'Failed to get ID token from Google');
+      }
+      
+      // Firebase integration if enabled
+      AuthCredential? firebaseCredential;
+      User? firebaseUser;
+      
+      if (signIntoFirebase) {
+        try {
+          firebaseCredential = GoogleAuthProvider.credential(
+            idToken: googleAuth.idToken,
+          );
+          
+          final userCredential = await FirebaseAuth.instance.signInWithCredential(firebaseCredential);
+          firebaseUser = userCredential.user;
+        } catch (e) {
+          throw SocialLoginUnknownException('google', 'Firebase authentication failed: $e');
+        }
+      }
 
-      // Create Firebase credential using only idToken
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        idToken: auth.idToken,
+      // Create user object
+      final user = SocialLoginUser(
+        id: googleUser.id,
+        name: googleUser.displayName ?? '',
+        email: googleUser.email,
+        photoUrl: googleUser.photoUrl,
       );
 
-      return SocialLoginResult(
-        name: account.displayName ?? '',
-        email: account.email,
-        photoUrl: account.photoUrl,
+      final result = SocialLoginResult(
+        user: user,
+        name: googleUser.displayName,
+        email: googleUser.email,
+        photoUrl: googleUser.photoUrl,
+        accessToken: googleAuth.idToken ?? '',
+        credential: firebaseCredential,
         provider: 'google',
-        credential: credential,
+        firebaseUser: firebaseUser,
         rawData: {
-          'id': account.id,
-          'displayName': account.displayName,
-          'email': account.email,
-          'photoUrl': account.photoUrl,
+          'idToken': googleAuth.idToken ?? '',
         },
       );
-    } on GoogleSignInException catch (e) {
-      // Handle specific Google Sign-In exceptions
-      switch (e.code.name) {
-        case 'canceled':
-          throw SocialLoginCancelledException('google');
-        case 'unknown':
-          throw SocialLoginUnknownException('google', e);
-        default:
-          throw SocialLoginUnknownException('google', e);
+
+      return result;
+    } catch (e) {
+      if (e is SocialLoginException) {
+        rethrow;
+      }
+      throw SocialLoginUnknownException('google', 'Google sign-in failed: $e');
+    }
+  }
+
+  /// Sign out from Google
+  @override
+  Future<void> signOut() async {
+    try {
+      await _googleSignIn.signOut();
+      _currentUser = null;
+      
+      // Sign out from Firebase if enabled
+      if (_signIntoFirebase && FirebaseAuth.instance.currentUser != null) {
+        await FirebaseAuth.instance.signOut();
       }
     } catch (e) {
       throw SocialLoginUnknownException('google', e);
     }
   }
 
-  /// Sign out from Google
-  Future<void> signOut() async {
-    await GoogleSignIn.instance.signOut();
+  /// Disconnect from Google (revoke access)
+  Future<void> disconnect() async {
+    await _googleSignIn.disconnect();
     _currentUser = null;
   }
 
-/// Get current user
-  GoogleSignInAccount? get currentUser => _currentUser;
+  /// Whether the user is currently signed in
+  @override
+  bool get isSignedIn {
+    return _currentUser != null;
+  }
 
-  /// Check if user is signed in
-  bool get isSignedIn => _currentUser != null;
+  /// Get current user
+  GoogleSignInAccount? get currentUser => _currentUser;
 }
